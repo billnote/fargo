@@ -19,7 +19,9 @@ func (e *EurekaConnection) SelectServiceURL() string {
 	if e.discoveryTtl == nil {
 		e.discoveryTtl = make(chan struct{}, 0)
 	}
+	log.Debug("Select Service URL")
 	if e.DNSDiscovery && len(e.discoveryTtl) == 0 {
+		log.Debug("Select Discovery Server from DNS")
 		servers, ttl, err := discoverDNS(e.Region, e.ServerDNSName, e.ServicePort, e.ServerURLBase)
 		if err != nil {
 			return choice(e.ServiceUrls)
