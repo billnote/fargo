@@ -24,7 +24,7 @@ func (e *EurekaConnection) SelectServiceURL() string {
 		log.Debug("Select Discovery Server from DNS")
 		servers, ttl, err := discoverDNS(e.Region, e.ServerDNSName, e.ServicePort, e.ServerURLBase)
 		if err != nil {
-			return choice(e.ServiceUrls)
+			return choice(servers)
 		}
 		e.discoveryTtl <- struct{}{}
 		time.AfterFunc(ttl, func() {
