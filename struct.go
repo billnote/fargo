@@ -16,17 +16,20 @@ var EurekaURLSlugs = map[string]string{
 
 // EurekaConnection is the settings required to make Eureka requests.
 type EurekaConnection struct {
-	ServiceUrls    []string
-	ServicePort    int
-	ServerURLBase  string
-	Timeout        time.Duration
-	PollInterval   time.Duration
-	PreferSameZone bool
-	Retries        int
-	DNSDiscovery   bool
-	DiscoveryZone  string
-	discoveryTtl   chan struct{}
-	UseJson        bool
+	ServiceUrls       []string
+	ServicePort       int
+	ServerURLBase     string
+	Timeout           time.Duration
+	PollInterval      time.Duration
+	PreferSameZone    bool
+	Retries           int
+	DNSDiscovery      bool
+	DiscoveryZone     string
+	discoveryTtl      chan struct{}
+	UseJson           bool
+	ServerDNSName     string
+	Region            string
+	AvaliabilityZones []string
 }
 
 // GetAppsResponseJson lets us deserialize the eureka/v2/apps response JSON—a wrapped GetAppsResponse.

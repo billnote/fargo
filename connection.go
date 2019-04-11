@@ -20,7 +20,7 @@ func (e *EurekaConnection) SelectServiceURL() string {
 		e.discoveryTtl = make(chan struct{}, 1)
 	}
 	if e.DNSDiscovery && len(e.discoveryTtl) == 0 {
-		servers, ttl, err := discoverDNS(e.DiscoveryZone, e.ServicePort, e.ServerURLBase)
+		servers, ttl, err := discoverDNS(e.Region, e.ServerDNSName, e.ServicePort, e.ServerURLBase)
 		if err != nil {
 			return choice(e.ServiceUrls)
 		}
@@ -64,6 +64,8 @@ func NewConnFromConfig(conf Config) (c EurekaConnection) {
 	c.Timeout = time.Duration(conf.Eureka.ConnectTimeoutSeconds) * time.Second
 	c.PollInterval = time.Duration(conf.Eureka.PollIntervalSeconds) * time.Second
 	c.PreferSameZone = conf.Eureka.PreferSameZone
+	c.Region = conf.Eureka.Region
+	c.AvaliabilityZones = conf.Eureka.AvailabilityZones
 	if conf.Eureka.UseDNSForServiceUrls {
 		log.Warning("UseDNSForServiceUrls is an experimental option")
 		c.DNSDiscovery = true

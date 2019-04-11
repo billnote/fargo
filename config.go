@@ -40,6 +40,8 @@ type eureka struct {
 	PreferSameZone        bool     // default false
 	RegisterWithEureka    bool     // default false
 	Retries               int      // default 3
+	Region                string
+	AvailabilityZones     []string
 }
 
 // ReadConfig from a file location. Minimal error handling. Just bails and passes up

@@ -4,21 +4,15 @@ package fargo
 
 import (
 	"fmt"
-	"github.com/cenkalti/backoff"
-	"github.com/franela/goreq"
-	"github.com/miekg/dns"
 	"time"
+
+	"github.com/cenkalti/backoff"
+	"github.com/miekg/dns"
 )
 
-const azURL = "http://169.254.169.254/latest/meta-data/placement/availability-zone"
-
-var ErrNotInAWS = fmt.Errorf("Not in AWS")
-
-func discoverDNS(domain string, port int, urlBase string) (servers []string, ttl time.Duration, err error) {
-	r, _ := region()
-
+func discoverDNS(region string, domain string, port int, urlBase string) (servers []string, ttl time.Duration, err error) {
 	// all DNS queries must use the FQDN
-	domain = "txt." + r + "." + dns.Fqdn(domain)
+	domain = "txt." + region + "." + dns.Fqdn(domain)
 	if _, ok := dns.IsDomainName(domain); !ok {
 		err = fmt.Errorf("invalid domain name: '%s' is not a domain name", domain)
 		return
@@ -98,33 +92,4 @@ func findDnsServerAddr() (string, error) {
 	} else {
 		return config.Servers[0] + ":" + config.Port, nil
 	}
-}
-
-func region() (string, error) {
-	zone, err := availabilityZone()
-	if err != nil {
-		log.Errorf("Could not retrieve availability zone err=%s", err.Error())
-		return "us-east-1", err
-	}
-	return zone[:len(zone)-1], nil
-}
-
-// defaults to us-east-1 if there's a problem
-func availabilityZone() (string, error) {
-	response, err := goreq.Request{Uri: azURL}.Do()
-	if err != nil {
-		return "", err
-	}
-	if response.StatusCode < 200 || response.StatusCode >= 300 {
-		body, _ := response.Body.ToString()
-		return "", fmt.Errorf("bad response code: code %d does not indicate successful request, body=%s",
-			response.StatusCode,
-			body,
-		)
-	}
-	zone, err := response.Body.ToString()
-	if err != nil {
-		return "", err
-	}
-	return zone, nil
 }
