@@ -22,6 +22,8 @@ func discoverDNS(region string, domain string, port int, urlBase string) (server
 		return
 	}
 
+	log.Debugf("regionRecords: %v", regionRecords)
+
 	for _, az := range regionRecords {
 		instances, _, er := retryingFindTXT("txt." + dns.Fqdn(az))
 		if er != nil {
@@ -32,6 +34,7 @@ func discoverDNS(region string, domain string, port int, urlBase string) (server
 			servers = append(servers, fmt.Sprintf("http://%s:%d/%s", instance, port, urlBase))
 		}
 	}
+	log.Debugf("servers: %v", servers)
 	return
 }
 

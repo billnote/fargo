@@ -23,6 +23,7 @@ func (e *EurekaConnection) SelectServiceURL() string {
 	if e.DNSDiscovery && len(e.discoveryTtl) == 0 {
 		log.Debug("Select Discovery Server from DNS")
 		servers, ttl, err := discoverDNS(e.Region, e.ServerDNSName, e.ServicePort, e.ServerURLBase)
+		log.Debugf("Servers: %v", servers)
 		if err != nil {
 			return choice(servers)
 		}
