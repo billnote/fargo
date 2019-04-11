@@ -17,7 +17,7 @@ func init() {
 // TODO: Make this not just pick a random one.
 func (e *EurekaConnection) SelectServiceURL() string {
 	if e.discoveryTtl == nil {
-		e.discoveryTtl = make(chan struct{}, 1)
+		e.discoveryTtl = make(chan struct{}, 0)
 	}
 	if e.DNSDiscovery && len(e.discoveryTtl) == 0 {
 		servers, ttl, err := discoverDNS(e.Region, e.ServerDNSName, e.ServicePort, e.ServerURLBase)
@@ -58,9 +58,6 @@ func NewConnFromConfigFile(location string) (c EurekaConnection, err error) {
 func NewConnFromConfig(conf Config) (c EurekaConnection) {
 	c.ServiceUrls = conf.Eureka.ServiceUrls
 	c.ServicePort = conf.Eureka.ServerPort
-	if len(c.ServiceUrls) == 0 && len(conf.Eureka.ServerDNSName) > 0 {
-		c.ServiceUrls = []string{conf.Eureka.ServerDNSName}
-	}
 	c.Timeout = time.Duration(conf.Eureka.ConnectTimeoutSeconds) * time.Second
 	c.PollInterval = time.Duration(conf.Eureka.PollIntervalSeconds) * time.Second
 	c.PreferSameZone = conf.Eureka.PreferSameZone
