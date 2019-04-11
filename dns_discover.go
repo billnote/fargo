@@ -13,16 +13,16 @@ import (
 func discoverDNS(region string, domain string, port int, urlBase string) (servers []string, ttl time.Duration, err error) {
 	// all DNS queries must use the FQDN
 	domain = "txt." + region + "." + dns.Fqdn(domain)
+	log.Debugf("domain: %s", domain)
 	if _, ok := dns.IsDomainName(domain); !ok {
 		err = fmt.Errorf("invalid domain name: '%s' is not a domain name", domain)
 		return
 	}
 	regionRecords, ttl, err := retryingFindTXT(domain)
+	log.Debugf("regionRecords: %v", regionRecords)
 	if err != nil {
 		return
 	}
-
-	log.Debugf("regionRecords: %v", regionRecords)
 
 	for _, az := range regionRecords {
 		instances, _, er := retryingFindTXT("txt." + dns.Fqdn(az))
