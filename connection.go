@@ -99,6 +99,7 @@ func NewInstanceFromConfig(conf Config) (ins Instance) {
 	}
 
 	ins.InstanceId = fmt.Sprintf("%s:%s:%d", ip, ins.App, ins.Port)
+	ins.IPAddr = ip
 	ins.HostName = host
 
 	if len(conf.Metadata) > 0 {
