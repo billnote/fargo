@@ -3,7 +3,9 @@ package fargo
 // MIT Licensed (see README.md) - Copyright (c) 2013 Hudl <@Hudl>
 
 import (
+	"fmt"
 	"math/rand"
+	"os"
 	"sync"
 	"time"
 )
@@ -84,6 +86,20 @@ func NewInstanceFromConfig(conf Config) (ins Instance) {
 	ins.Status = UP
 	ins.DataCenterInfo = DataCenterInfo{Name: MyOwn}
 	ins.LeaseInfo = LeaseInfo{DurationInSecs: 60}
+
+	ip, err := getIPAddress()
+	if err != nil {
+		log.Errorf("Get IP Address error: %s", err.Error())
+		ip = "127.0.0.1"
+	}
+	host, err := os.Hostname()
+	if err != nil {
+		log.Errorf("Get hostname error: %s", err.Error())
+		host = "localhost"
+	}
+
+	ins.InstanceId = fmt.Sprintf("%s:%s:%d", ip, ins.App, ins.Port)
+	ins.HostName = host
 
 	if len(conf.Metadata) > 0 {
 		for key, item := range conf.Metadata {

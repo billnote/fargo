@@ -81,6 +81,6 @@ func (c *Config) fillDefaults() {
 		c.Eureka.PollIntervalSeconds = 30
 	}
 	if len(c.Eureka.ServerURLBase) == 0 {
-		c.Eureka.ServerURLBase = "eureka/v2"
+		c.Eureka.ServerURLBase = "eureka"
 	}
 }
