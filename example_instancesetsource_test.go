@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/hudl/fargo"
+	"github.com/billnote/fargo"
 )
 
 func ExampleInstanceSetSource_Latest_outcomes() {

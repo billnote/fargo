@@ -43,3 +43,10 @@ func TestHttpClient(t *testing.T) {
 		})
 	})
 }
+
+func TestGetIPAddress(t *testing.T) {
+	Convey("Testing get local ip address", func() {
+		ip, _ := getIPAddress()
+		So(ip, ShouldEqual, "192.168.51.23")
+	})
+}

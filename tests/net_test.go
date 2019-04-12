@@ -9,7 +9,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/hudl/fargo"
+	"github.com/billnote/fargo"
 	. "github.com/smartystreets/goconvey/convey"
 )
 
@@ -99,7 +99,7 @@ func TestConnectionCreation(t *testing.T) {
 }
 
 func TestGetApps(t *testing.T) {
-	e, _ := fargo.NewConnFromConfigFile("./config_sample/local.gcfg")
+	e, _, _ := fargo.NewConnFromConfigFile("./config_sample/local.gcfg")
 	for _, j := range []bool{false, true} {
 		e.UseJson = j
 		Convey("Pull applications", t, func() {
@@ -122,7 +122,7 @@ func TestGetApps(t *testing.T) {
 }
 
 func TestGetInstancesByNonexistentVIPAddress(t *testing.T) {
-	e, _ := fargo.NewConnFromConfigFile("./config_sample/local.gcfg")
+	e, _, _ := fargo.NewConnFromConfigFile("./config_sample/local.gcfg")
 	for _, e.UseJson = range []bool{false, true} {
 		Convey("Get instances by VIP address", t, func() {
 			Convey("when the VIP address has no instances", func() {
@@ -143,7 +143,7 @@ func TestGetSingleInstanceByVIPAddress(t *testing.T) {
 	if testing.Short() {
 		t.SkipNow()
 	}
-	e, _ := fargo.NewConnFromConfigFile("./config_sample/local.gcfg")
+	e, _, _ := fargo.NewConnFromConfigFile("./config_sample/local.gcfg")
 	cacheDelay := 35 * time.Second
 	vipAddress := "app"
 	for _, e.UseJson = range []bool{false, true} {
@@ -196,7 +196,7 @@ func TestGetMultipleInstancesByVIPAddress(t *testing.T) {
 	if testing.Short() {
 		t.SkipNow()
 	}
-	e, _ := fargo.NewConnFromConfigFile("./config_sample/local.gcfg")
+	e, _, _ := fargo.NewConnFromConfigFile("./config_sample/local.gcfg")
 	cacheDelay := 35 * time.Second
 	for _, e.UseJson = range []bool{false, true} {
 		Convey("When the VIP address has one instance", t, withRegisteredInstance(&e, func(instance *fargo.Instance) {
@@ -219,7 +219,7 @@ func TestGetMultipleInstancesByVIPAddress(t *testing.T) {
 }
 
 func TestRegistration(t *testing.T) {
-	e, _ := fargo.NewConnFromConfigFile("./config_sample/local.gcfg")
+	e, _, _ := fargo.NewConnFromConfigFile("./config_sample/local.gcfg")
 	i := fargo.Instance{
 		HostName:         "i-123456",
 		Port:             9090,
@@ -263,7 +263,7 @@ func TestRegistration(t *testing.T) {
 }
 
 func TestReregistration(t *testing.T) {
-	e, _ := fargo.NewConnFromConfigFile("./config_sample/local.gcfg")
+	e, _, _ := fargo.NewConnFromConfigFile("./config_sample/local.gcfg")
 
 	for _, j := range []bool{false, true} {
 		e.UseJson = j
@@ -309,7 +309,7 @@ func TestReregistration(t *testing.T) {
 }
 
 func DontTestDeregistration(t *testing.T) {
-	e, _ := fargo.NewConnFromConfigFile("./config_sample/local.gcfg")
+	e, _, _ := fargo.NewConnFromConfigFile("./config_sample/local.gcfg")
 	i := fargo.Instance{
 		HostName:         "i-123456",
 		Port:             9090,
@@ -341,7 +341,7 @@ func DontTestDeregistration(t *testing.T) {
 }
 
 func TestUpdateStatus(t *testing.T) {
-	e, _ := fargo.NewConnFromConfigFile("./config_sample/local.gcfg")
+	e, _, _ := fargo.NewConnFromConfigFile("./config_sample/local.gcfg")
 	i := fargo.Instance{
 		HostName:         "i-123456",
 		Port:             9090,
@@ -374,7 +374,7 @@ func TestUpdateStatus(t *testing.T) {
 }
 
 func TestMetadataReading(t *testing.T) {
-	e, _ := fargo.NewConnFromConfigFile("./config_sample/local.gcfg")
+	e, _, _ := fargo.NewConnFromConfigFile("./config_sample/local.gcfg")
 	i := fargo.Instance{
 		HostName:         "i-123456",
 		Port:             9090,

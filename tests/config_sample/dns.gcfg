@@ -1,0 +1,21 @@
+[Eureka]
+InTheCloud = true
+UseDNSForServiceUrls = true
+DNSDiscoveryZone = cloud
+ServerDNSName = eureka.local
+ServerPort = 7000
+PreferSameZone = true
+RegisterWithEureka = true
+Region = global
+AvailabilityZones = cloud
+AvailabilityZones = mobile
+
+[InstanceInfo]
+ApplicationName = TESTAPP
+Port = 8080
+HomePageUrl = http://TESTAPP.com/home
+StatusPageUrl = http://TESTAPP.com/home
+HealthCheckUrl =  http://TESTAPP.com/home
+
+[Metadata "Key"]
+Value = value

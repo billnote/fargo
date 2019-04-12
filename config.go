@@ -8,8 +8,10 @@ import (
 
 // Config is a base struct to be read by code.google.com/p/gcfg
 type Config struct {
-	AWS    aws
-	Eureka eureka
+	AWS          aws
+	Eureka       eureka
+	InstanceInfo instanceInfo
+	Metadata     map[string]*struct{ Value string }
 }
 
 type aws struct {
@@ -42,6 +44,14 @@ type eureka struct {
 	Retries               int      // default 3
 	Region                string
 	AvailabilityZones     []string
+}
+
+type instanceInfo struct {
+	ApplicationName string
+	Port            int
+	HomePageUrl     string
+	StatusPageUrl   string
+	HealthCheckUrl  string
 }
 
 // ReadConfig from a file location. Minimal error handling. Just bails and passes up

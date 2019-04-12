@@ -10,7 +10,7 @@ import (
 	"io/ioutil"
 	"testing"
 
-	"github.com/hudl/fargo"
+	"github.com/billnote/fargo"
 	. "github.com/smartystreets/goconvey/convey"
 )
 

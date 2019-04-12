@@ -4,10 +4,11 @@ package fargo_test
 
 import (
 	"encoding/xml"
-	"github.com/hudl/fargo"
-	. "github.com/smartystreets/goconvey/convey"
 	"strconv"
 	"testing"
+
+	"github.com/billnote/fargo"
+	. "github.com/smartystreets/goconvey/convey"
 )
 
 func TestGetInt(t *testing.T) {

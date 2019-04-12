@@ -17,13 +17,13 @@ func init() {
 // TODO: Make this not just pick a random one.
 func (e *EurekaConnection) SelectServiceURL() string {
 	if e.discoveryTtl == nil {
-		e.discoveryTtl = make(chan struct{}, 0)
+		e.discoveryTtl = make(chan struct{}, 1)
 	}
 
 	if e.DNSDiscovery && len(e.discoveryTtl) == 0 {
 		servers, ttl, err := discoverDNS(e.Region, e.ServerDNSName, e.ServicePort, e.ServerURLBase)
 		if err != nil {
-			return choice(servers)
+			return choice(e.ServiceUrls)
 		}
 		e.discoveryTtl <- struct{}{}
 		time.AfterFunc(ttl, func() {
@@ -45,13 +45,13 @@ func choice(options []string) string {
 
 // NewConnFromConfigFile sets up a connection object based on a config in
 // specified path
-func NewConnFromConfigFile(location string) (c EurekaConnection, err error) {
+func NewConnFromConfigFile(location string) (c EurekaConnection, ins Instance, err error) {
 	cfg, err := ReadConfig(location)
 	if err != nil {
 		log.Errorf("Problem reading config %s error: %s", location, err.Error())
-		return c, err
+		return c, ins, err
 	}
-	return NewConnFromConfig(cfg), nil
+	return NewConnFromConfig(cfg), NewInstanceFromConfig(cfg), nil
 }
 
 // NewConnFromConfig will, given a Config struct, return a connection based on
@@ -72,6 +72,26 @@ func NewConnFromConfig(conf Config) (c EurekaConnection) {
 		c.ServerURLBase = conf.Eureka.ServerURLBase
 	}
 	return c
+}
+
+// NewInstanceFromConfig will, given a Config struct, return a Instance based on
+func NewInstanceFromConfig(conf Config) (ins Instance) {
+	ins.App = conf.InstanceInfo.ApplicationName
+	ins.Port = conf.InstanceInfo.Port
+	ins.HealthCheckUrl = conf.InstanceInfo.HealthCheckUrl
+	ins.HomePageUrl = conf.InstanceInfo.HomePageUrl
+	ins.StatusPageUrl = conf.InstanceInfo.StatusPageUrl
+	ins.Status = UP
+	ins.DataCenterInfo = DataCenterInfo{Name: MyOwn}
+	ins.LeaseInfo = LeaseInfo{DurationInSecs: 60}
+
+	if len(conf.Metadata) > 0 {
+		for key, item := range conf.Metadata {
+			ins.SetMetadataString(key, item.Value)
+		}
+	}
+
+	return ins
 }
 
 // NewConn is a default connection with just a list of ServiceUrls. Most basic

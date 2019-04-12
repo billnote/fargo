@@ -3,9 +3,10 @@ package fargo_test
 // MIT Licensed (see README.md) - Copyright (c) 2013 Hudl <@Hudl>
 
 import (
-	"github.com/hudl/fargo"
-	. "github.com/smartystreets/goconvey/convey"
 	"testing"
+
+	"github.com/billnote/fargo"
+	. "github.com/smartystreets/goconvey/convey"
 )
 
 func TestConfigs(t *testing.T) {
@@ -34,5 +35,10 @@ func TestConfigs(t *testing.T) {
 			So(conf.Eureka.ServiceUrls, ShouldContain, "http://172.17.0.3:8080/eureka/v2")
 		})
 		So(conf.Eureka.UseDNSForServiceUrls, ShouldEqual, false)
+	})
+
+	Convey("Testing a dns config", t, func() {
+		_, err := fargo.ReadConfig("./config_sample/dns.gcfg")
+		So(err, ShouldBeNil)
 	})
 }

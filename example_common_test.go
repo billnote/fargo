@@ -2,7 +2,7 @@ package fargo_test
 
 // MIT Licensed (see README.md) - Copyright (c) 2013 Hudl <@Hudl>
 
-import "github.com/hudl/fargo"
+import "github.com/billnote/fargo"
 
 func makeConnection() fargo.EurekaConnection {
 	var c fargo.Config
