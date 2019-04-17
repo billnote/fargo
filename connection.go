@@ -85,7 +85,8 @@ func NewInstanceFromConfig(conf Config) (ins Instance) {
 	ins.StatusPageUrl = conf.InstanceInfo.StatusPageUrl
 	ins.Status = UP
 	ins.DataCenterInfo = DataCenterInfo{Name: MyOwn}
-	ins.LeaseInfo = LeaseInfo{DurationInSecs: 60}
+	ins.CountryId = 1
+	ins.LeaseInfo = LeaseInfo{DurationInSecs: 15, RenewalIntervalInSecs: 10}
 
 	ip, err := getIPAddress()
 	if err != nil {
