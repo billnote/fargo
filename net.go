@@ -9,8 +9,11 @@ import (
 	"fmt"
 	"math/rand"
 	"net/http"
+	"os"
+	"os/signal"
 	"strings"
 	"sync"
+	"syscall"
 	"time"
 )
 
@@ -624,6 +627,51 @@ func (s *InstanceSetSource) Stop() {
 		close(s.done)
 		s.done = nil
 	}
+}
+
+// RegisterHeartbeatsInstance will register the given Instance with eureka if it is not already registered,
+// and automatically send heartbeats. See HeartBeatInstance for that
+// functionality
+func (e *EurekaConnection) RegisterHeartbeatsInstance(ins *Instance) error {
+	err := e.RegisterInstance(ins)
+
+	if err != nil {
+		return err
+	}
+
+	e.sendHeartbeats(ins)
+	e.handleSigterm(ins)
+
+	return nil
+}
+
+func (e *EurekaConnection) sendHeartbeats(ins *Instance) {
+	go func() {
+		ticker := time.NewTicker(5 * time.Second)
+		defer ticker.Stop()
+		for {
+			select {
+			case <-ticker.C:
+				if err := e.HeartBeatInstance(ins); err != nil {
+					if code, ok := HTTPResponseStatusCode(err); ok && code == http.StatusNotFound {
+						e.ReregisterInstance(ins)
+					}
+				}
+			}
+		}
+	}()
+}
+
+func (e *EurekaConnection) handleSigterm(ins *Instance) {
+	c := make(chan os.Signal, 1)
+	signal.Notify(c, os.Interrupt)    // Register os.Interrupt
+	signal.Notify(c, syscall.SIGTERM) // Register syscall.SIGTERM
+
+	go func() { // Start an anonymous func running in a goroutine
+		<-c                       // that will block until a message is recieved on
+		e.DeregisterInstance(ins) // the channel. When that happens, perform Eureka
+		os.Exit(1)                // deregistration and exit program.
+	}()
 }
 
 // RegisterInstance will register the given Instance with eureka if it is not already registered,

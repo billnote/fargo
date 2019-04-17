@@ -36,7 +36,7 @@ type eureka struct {
 	ServerDNSName         string   // default ""
 	ServiceUrls           []string // default []
 	ServerPort            int      // default 7001
-	ServerURLBase         string   // default "eureka/v2"
+	ServerURLBase         string   // default "eureka"
 	PollIntervalSeconds   int      // default 30
 	EnableDelta           bool     // TODO: Support querying for deltas
 	PreferSameZone        bool     // default false
