@@ -5,7 +5,6 @@ package fargo
 import (
 	"fmt"
 	"math/rand"
-	"os"
 	"sync"
 	"time"
 )
@@ -80,6 +79,7 @@ func NewConnFromConfig(conf Config) (c EurekaConnection) {
 func NewInstanceFromConfig(conf Config) (ins Instance) {
 	ins.App = conf.InstanceInfo.ApplicationName
 	ins.Port = conf.InstanceInfo.Port
+	ins.PortEnabled = true
 	ins.HealthCheckUrl = conf.InstanceInfo.HealthCheckUrl
 	ins.HomePageUrl = conf.InstanceInfo.HomePageUrl
 	ins.StatusPageUrl = conf.InstanceInfo.StatusPageUrl
@@ -93,15 +93,11 @@ func NewInstanceFromConfig(conf Config) (ins Instance) {
 		log.Errorf("Get IP Address error: %s", err.Error())
 		ip = "127.0.0.1"
 	}
-	host, err := os.Hostname()
-	if err != nil {
-		log.Errorf("Get hostname error: %s", err.Error())
-		host = "localhost"
-	}
 
 	ins.InstanceId = fmt.Sprintf("%s:%s:%d", ip, ins.App, ins.Port)
 	ins.IPAddr = ip
-	ins.HostName = host
+	ins.HostName = ip
+	ins.VipAddress = conf.InstanceInfo.ApplicationName
 
 	if len(conf.Metadata) > 0 {
 		for key, item := range conf.Metadata {
